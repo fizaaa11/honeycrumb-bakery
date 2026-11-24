@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Honeycrumb Bake House</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
+<style>
+/* Layout: vintage bakery counter. Checkerboard tile strips, script wordmark, flat bordered menu cards, slide-in order drawer. */
+:root{
+  --paper:#f3e9d8; --card:#fbf5ea; --ink:#3b2417; --muted:#6d5645;
+  --btn:#7a4a2e; --btn-ink:#fbf5ea; --caramel:#b3652b; --line:#dccaa9; --panel:#efdfc4;
+  --display:'Pinyon Script','Snell Roundhand',cursive;
+  --head:'Playfair Display',Georgia,serif;
+  --body:'Karla',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1f130d; --card:#2a1b13; --ink:#f1e4cf; --muted:#c9b49a;
+    --btn:#d9a66f; --btn-ink:#2a1b13; --caramel:#e0a15e; --line:#4a3426; --panel:#3a2619; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1f130d; --card:#2a1b13; --ink:#f1e4cf; --muted:#c9b49a;
+  --btn:#d9a66f; --btn-ink:#2a1b13; --caramel:#e0a15e; --line:#4a3426; --panel:#3a2619; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--body);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:30}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--caramel);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tiles{height:22px;background:conic-gradient(var(--ink) 25%,var(--paper) 0 50%,var(--ink) 0 75%,var(--paper) 0) 0 0/22px 22px;border-block:2px solid var(--ink)}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:8px}
+.mark{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:2rem;line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.mark .lg{width:48px;height:48px;flex:none;display:block;color:var(--ink)}
+.mark .lg svg,.flogo .lg2 svg{display:block;width:100%;height:auto}
+.flogo{grid-column:1/-1;display:flex;align-items:center;gap:16px}
+.flogo .lg2{width:120px;flex:none;color:var(--ink)}
+.flogo p{font-family:var(--display);font-size:2.3rem;line-height:1;color:var(--ink)}
+.flogo{flex-wrap:wrap}.flogo p{min-width:0}
+@media(max-width:380px){.mark span:last-child{display:none}}
+nav.links{display:flex;gap:20px;align-items:center}
+nav.links a{color:var(--ink);text-decoration:none;font-weight:500;font-size:.95rem}
+nav.links a:hover{color:var(--caramel)}
+.cartbtn{display:inline-flex;align-items:center;gap:8px;background:var(--btn);color:var(--btn-ink);border:0;border-radius:999px;padding:9px 16px;font-weight:700;cursor:pointer}
+.cartbtn .n{background:var(--btn-ink);color:var(--btn);border-radius:999px;min-width:22px;height:22px;display:inline-grid;place-items:center;font-size:.8rem;padding:0 6px}
+@media(max-width:640px){nav.links .hide-s{display:none}}
+.menubtn{display:none;width:40px;height:40px;border:1.5px solid var(--ink);background:transparent;border-radius:50%;cursor:pointer;place-items:center;padding:0}
+.menubtn span,.menubtn span::before,.menubtn span::after{display:block;width:16px;height:2px;background:var(--ink);border-radius:2px;position:relative;transition:transform .25s,top .25s,background .25s}
+.menubtn span::before,.menubtn span::after{content:"";position:absolute;left:0}
+.menubtn span::before{top:-5px}
+.menubtn span::after{top:5px}
+.menubtn[aria-expanded="true"] span{background:transparent}
+.menubtn[aria-expanded="true"] span::before{top:0;transform:rotate(45deg)}
+.menubtn[aria-expanded="true"] span::after{top:0;transform:rotate(-45deg)}
+.mmenu{border-top:1px solid var(--line);background:var(--paper);padding:6px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column}
+.mmenu a{font-family:var(--head);font-size:1.3rem;font-weight:700;color:var(--ink);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--line)}
+.mmenu a:last-child{border-bottom:0}
+@media(max-width:640px){.menubtn{display:inline-grid}}
+@media(min-width:641px){.mmenu{display:none!important}}
+[id]{scroll-margin-top:76px}
+@media(max-width:480px){.mark{font-size:1.65rem;gap:8px}.mark .lg{width:40px;height:40px}nav.links{gap:8px}.cartbtn{padding:8px 12px}header.top .wrap{gap:8px}}
+
+/* hero */
+.hero{padding-block:44px 52px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center}
+.eyebrow{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(3.2rem,9vw,6rem);line-height:.95;margin:10px 0 14px}
+.hero .lede{font-family:var(--head);font-style:italic;font-weight:500;font-size:clamp(1.15rem,2.6vw,1.5rem);max-width:30ch}
+.hero .sub{margin-top:14px;color:var(--muted);max-width:46ch}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);border-radius:999px;padding:11px 22px;font-weight:700;text-decoration:none;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--ink)}
+.badge{justify-self:center;width:min(230px,60vw);color:var(--ink)}
+.badge svg{width:100%;height:auto;display:block}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.badge{justify-self:start;width:150px}}
+
+/* promise strip */
+.strip{border-block:1px solid var(--line);background:var(--card)}
+.strip .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 24px;padding-block:16px}
+.strip div{font-size:.95rem}
+.strip b{font-family:var(--head)}
+
+/* menu */
+section.block{padding-block:56px 8px}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin-bottom:20px}
+.sec-head h2{font-size:clamp(1.8rem,4vw,2.4rem)}
+.sec-head p{color:var(--muted);max-width:44ch}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:7px 16px;font-weight:500;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.item .row{display:flex;gap:12px;align-items:flex-start}
+.ico{flex:none;width:48px;height:48px;border:1.5px solid var(--ink);border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.ico svg{width:28px;height:28px}
+.item h3{font-size:1.15rem}
+.tag{display:inline-block;margin-top:4px;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--caramel)}
+.item p.d{color:var(--muted);font-size:.93rem;flex:1}
+.item .buy{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.item select{flex:1 1 120px;min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+.fixed-opt{flex:1 1 120px;color:var(--muted);font-size:.9rem}
+.price{font-family:var(--head);font-weight:700;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.add{border:1.5px solid var(--btn);background:transparent;color:var(--ink);border-radius:999px;padding:7px 16px;font-weight:700;cursor:pointer}
+.add:hover,.add.done{background:var(--btn);color:var(--btn-ink)}
+
+/* how to order */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;counter-reset:s;padding:0;list-style:none;margin:0}
+.steps li{counter-increment:s;border-top:2px solid var(--ink);padding-top:12px}
+.steps li::before{content:"Step " counter(s);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--caramel)}
+.steps h3{font-size:1.2rem;margin:4px 0 6px}
+.steps p{color:var(--muted)}
+
+/* footer */
+footer{margin-top:64px;border-top:2px solid var(--ink);background:var(--card);padding-block:36px 110px}
+footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+footer h4{margin:0 0 6px;font-family:var(--head);font-size:1.05rem}
+footer p,footer a{color:var(--muted);font-size:.95rem}
+.copy{border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:4px 10px;font-size:.8rem;cursor:pointer;margin-left:6px}
+.fine{grid-column:1/-1;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+
+/* floating cart bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--btn);color:var(--btn-ink);display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:pointer;border:0;width:100%;font-weight:700;text-align:left}
+
+/* drawer */
+.veil{position:fixed;inset:0;background:rgba(20,10,5,.55);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--paper);z-index:50;overflow-y:auto;border-left:2px solid var(--ink);
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 16px;display:flex;flex-direction:column;gap:14px}
+.drawer header{display:flex;justify-content:space-between;align-items:center}
+.drawer h2{font-size:1.5rem}
+.x{border:1px solid var(--line);background:var(--card);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.1rem}
+.line{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.line b{font-family:var(--head)}
+.line small{color:var(--muted);display:block}
+.qty{display:inline-flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--ink);background:transparent;cursor:pointer;line-height:1}
+.line .p{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.total{display:flex;justify-content:space-between;font-family:var(--head);font-size:1.25rem;font-weight:700;padding-top:4px}
+.empty{color:var(--muted);padding:18px 0}
+form.ck{display:grid;gap:10px}
+form.ck label{display:grid;gap:4px;font-size:.88rem;font-weight:700}
+form.ck input,form.ck select,form.ck textarea{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:9px 10px;font-weight:400;width:100%;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:420px){.two{grid-template-columns:1fr}}
+.err{color:#b3261e;font-size:.9rem;min-height:1.2em}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .err{color:#ff9d92}}
+:root[data-theme="dark"] .err{color:#ff9d92}
+.send{display:grid;gap:10px}
+.note{font-size:.85rem;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;z-index:60;font-size:.92rem;max-width:90vw;text-align:center}
+/* motion and food art */
+.scene{position:relative;justify-self:center;width:min(430px,100%)}
+.scene svg.hero-art{width:100%;height:auto;display:block;overflow:visible}
+.spin{position:absolute;left:0;top:-6px;width:112px;color:var(--ink);background:var(--paper);border-radius:50%;animation:spin 26s linear infinite}
+.spin svg{display:block;width:100%;height:auto}
+.crumb{position:absolute;border-radius:50%;background:var(--caramel);opacity:.75;animation:drift 6s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(8px,-16px) rotate(30deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes steam{0%{transform:translateY(8px);opacity:0}30%{opacity:.75}100%{transform:translateY(-6px);opacity:0}}
+@keyframes rise{from{transform:translateY(18px)}to{transform:none}}
+@keyframes bump{40%{transform:scale(1.4)}}
+@keyframes slide{to{transform:translateX(-50%)}}
+.bob{animation:bob 4.2s ease-in-out infinite}
+.bob.b2{animation-delay:-1.4s}
+.bob.b3{animation-delay:-2.8s}
+.steam path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;opacity:0;animation:steam 3s ease-in-out infinite}
+.steam path:nth-child(2){animation-delay:.8s}
+.steam path:nth-child(3){animation-delay:1.6s}
+.marquee{overflow:hidden;background:var(--ink);color:var(--paper)}
+.track{display:flex;width:max-content;animation:slide 40s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{padding:10px 18px;font-family:var(--head);font-style:italic;white-space:nowrap}
+.track i{font-style:normal;color:var(--caramel);padding-left:18px}
+.item{padding:0;gap:0;overflow:hidden;animation:rise .55s both;animation-delay:calc(var(--i,0) * 45ms)}
+.art{background:var(--panel);aspect-ratio:4/3;display:grid;place-items:center;border-bottom:1px solid var(--line);overflow:hidden}
+.art svg{width:92%;height:auto;max-height:100%;transition:transform .35s}
+.item:hover .art svg{transform:scale(1.07) rotate(-2deg)}
+.in{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.cartbtn.bump .n{animation:bump .4s}
+.fly{position:fixed;width:34px;height:34px;z-index:70;pointer-events:none;color:var(--ink)}
+.fly svg{width:100%;height:100%}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .track{flex-wrap:wrap;width:auto}
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-brownie" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="24" height="20" rx="2"/><path d="M8 12c4-3 6 3 10 0s5-2 6 1M8 20c4-3 6 3 10 0s5-2 6 1"/></symbol>
+  <symbol id="i-cookie" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="11" r="1.3" fill="currentColor"/><circle cx="21" cy="18" r="1.3" fill="currentColor"/><circle cx="13" cy="20" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-cake" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 26h22v-8H5zM7 18v-5h18v5M16 13V8"/><path d="M12 22c1.5 1.5 2.5-1.5 4 0s2.5-1.5 4 0"/><circle cx="16" cy="6" r="1.4"/></symbol>
+  <symbol id="i-box" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l12-6 12 6v12l-12 6-12-6z"/><path d="M4 11l12 6 12-6M16 17v12"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Honeycrumb Bake House, home"><span class="lg" data-logo></span><span>Honeycrumb</span></a>
+    <nav class="links" aria-label="Main">
+      <a class="hide-s" href="#menu">Menu</a>
+      <a class="hide-s" href="#how">How to order</a>
+      <a class="hide-s" href="#contact">Contact</a>
+      <button class="cartbtn" id="openCart" type="button" aria-label="Open your order">Order <span class="n" id="cartN">0</span></button>
+      <button class="menubtn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mmenu"><span></span></button>
+    </nav>
+  </div>
+  <div class="mmenu" id="mmenu" hidden>
+    <a href="#menu">Menu</a>
+    <a href="#how">How to order</a>
+    <a href="#contact">Contact</a>
+  </div>
+</header>
+<div class="tiles" aria-hidden="true"></div>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Home bakery &middot; <span data-city></span></p>
+        <h1>Honeycrumb<br>Bake House</h1>
+        <p class="lede">Sweet cravings, baked fresh the day you need them.</p>
+        <p class="sub">Fudgy swirl brownies, stuffed cookies, cheesecakes and custom cookie cakes. Pick your box, send the order on WhatsApp or Instagram, and we confirm the rest in chat.</p>
+        <div class="cta">
+          <a class="btn" href="#menu">See the menu</a>
+          <a class="btn alt" href="#how">How ordering works</a>
+        </div>
+      </div>
+      <div class="scene">
+        <span class="crumb" style="width:10px;height:10px;left:28%;top:8%"></span>
+        <span class="crumb" style="width:7px;height:7px;right:8%;top:18%;animation-delay:-2s"></span>
+        <span class="crumb" style="width:12px;height:12px;left:2%;top:58%;animation-delay:-4s"></span>
+        <span class="crumb" style="width:8px;height:8px;right:2%;top:62%;animation-delay:-1s"></span>
+        <svg class="hero-art" id="heroArt" viewBox="0 0 400 320" role="img" aria-label="Illustration of a blueberry cheesecake, a stuffed cookie and swirl brownies"></svg>
+        <div class="spin">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Made fresh daily. Order one day prior.">
+          <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="100" cy="100" r="52" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path id="ring" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0" fill="none"/>
+          <text font-family="Karla,sans-serif" font-size="12.5" font-weight="700" fill="currentColor"><textPath href="#ring" textLength="456" lengthAdjust="spacing">MADE FRESH DAILY • ORDER ONE DAY PRIOR •</textPath></text>
+          <use href="#i-cookie" x="68" y="68" width="64" height="64" color="currentColor"/>
+        </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><b>Made fresh daily.</b> Nothing sits on a shelf.</div>
+      <div><b>Order one day prior.</b> Pick a date at checkout.</div>
+      <div><b>Order on WhatsApp or Instagram.</b> Payment is confirmed in chat.</div>
+    </div>
+  </div>
+
+  <section class="block" id="menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The menu</h2>
+        <p>Choose a size, add to your order, and send it when you are ready. Prices are in Pakistani rupees.</p>
+      </div>
+      <div class="tabs" id="tabs" role="group" aria-label="Menu categories"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="sec-head"><h2>How to order</h2></div>
+      <ol class="steps">
+        <li><h3>Build your box</h3><p>Add brownies, cookies or a cake from the menu. Cake messages and allergies go in the notes.</p></li>
+        <li><h3>Send it in chat</h3><p>Your order opens as a ready-made WhatsApp message, or copies for an Instagram DM.</p></li>
+        <li><h3>Confirm and pay</h3><p>We reply with the total, delivery charge and payment details. Baking starts once payment is confirmed.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="flogo"><span class="lg2" data-logo></span><p>Honeycrumb Bake House</p></div>
+    <div>
+      <h4>WhatsApp</h4>
+      <p><span id="waText"></span> <button class="copy" type="button" data-copy="wa">Copy</button></p>
+    </div>
+    <div>
+      <h4>Instagram</h4>
+      <p><a id="igLink" href="#" target="_blank" rel="noopener"></a></p>
+    </div>
+    <div>
+      <h4>Where</h4>
+      <p><span data-city></span>. Delivery charges depend on your area and are confirmed in chat.</p>
+    </div>
+    <p class="fine">Developed by Fiza. Orders need one day's notice. Custom cakes may need more time, so message us early. Prices shown are the current menu prices.</p>
+  </div>
+</footer>
+
+<button class="bar" id="bar" type="button" hidden><span id="barL"></span><span id="barR">View order</span></button>
+
+<div class="veil" id="veil" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" hidden>
+  <header><h2 id="dTitle">Your order</h2><button class="x" id="closeCart" type="button" aria-label="Close order">&times;</button></header>
+  <div id="lines"></div>
+  <div class="total" id="totalRow" hidden><span>Items total</span><span id="total"></span></div>
+  <form class="ck" id="ck" novalidate onsubmit="return false" hidden>
+    <label for="cName">Your name<input id="cName" autocomplete="name" placeholder="e.g. Fiza Aslam"></label>
+    <label for="cPhone">Phone number<input id="cPhone" type="tel" autocomplete="tel" placeholder="03xx xxxxxxx"></label>
+    <div class="two">
+      <label for="cMode">Delivery or pickup
+        <select id="cMode"><option value="Delivery">Delivery</option><option value="Pickup">Pickup</option></select></label>
+      <label for="cDate">Needed on<input id="cDate" type="date"></label>
+    </div>
+    <label for="cAddr" id="addrL">Delivery address<textarea id="cAddr" rows="2" autocomplete="street-address" placeholder="House, street, area"></textarea></label>
+    <label for="cPay">How will you pay?
+      <select id="cPay">
+        <option>Bank transfer</option><option>Easypaisa</option><option>JazzCash</option><option>Cash on delivery</option>
+      </select></label>
+    <label for="cNote">Notes (cake message, allergies)<textarea id="cNote" rows="2" placeholder="e.g. Happy Birthday Mummy"></textarea></label>
+    <p class="err" id="err" role="alert"></p>
+    <div class="send">
+      <a class="btn" id="wa" href="#" target="_blank" rel="noopener">Send order on WhatsApp</a>
+      <a class="btn alt" id="ig" href="#" target="_blank" rel="noopener">Copy order and open Instagram</a>
+      <p class="note">Payment details are shared in chat after we confirm your order and the delivery charge.</p>
+    </div>
+  </form>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* Edit these before sharing the site. WhatsApp number: country code, no plus or spaces. */
+var CONFIG = {
+  whatsapp: '923001234567',
+  whatsappShown: '+92 300 1234567',
+  instagram: 'honeycrumb.pk',
+  city: 'Hyderabad, Sindh'
+};
+
+var CATS = [
+  {id:'all', label:'Everything'},
+  {id:'brownies', label:'Brownies'},
+  {id:'cookies', label:'Cookies'},
+  {id:'pops', label:'Chocolate popsicles'},
+  {id:'cakes', label:'Cakes & cheesecakes'},
+  {id:'boxes', label:'Gift boxes'}
+];
+var BR = [{l:'Box of 4',p:1100},{l:'Box of 8',p:2000},{l:'Box of 12',p:2900}];
+function brOpts(a,b,c){return [{l:'Box of 4',p:a},{l:'Box of 8',p:b},{l:'Box of 12',p:c}];}
+function ckOpts(a,b,c){return [{l:'1 cookie',p:a},{l:'Box of 6',p:b},{l:'Box of 12',p:c}];}
+var ITEMS = [
+  {id:'b1',cat:'brownies',ic:'brownie',n:'Classic Fudge Brownies',d:'Dense, glossy and deeply chocolatey with a crackly top.',o:brOpts(1100,2000,2900)},
+  {id:'b2',cat:'brownies',ic:'brownie',n:'Walnut Fudge Brownies',d:'Our classic fudge base packed with toasted walnuts.',o:brOpts(1200,2200,3200)},
+  {id:'b3',cat:'brownies',ic:'brownie',n:'Biscoff Swirl Brownies',d:'Fudge brownie marbled with Lotus Biscoff spread and crumb.',tag:'Bestseller',o:brOpts(1300,2400,3500)},
+  {id:'b4',cat:'brownies',ic:'brownie',n:'Nutella Swirl Brownies',d:'Hazelnut chocolate ribbons through a soft, fudgy centre.',o:brOpts(1300,2400,3500)},
+  {id:'b5',cat:'brownies',ic:'brownie',n:'Blueberry Cheesecake Swirl',d:'Cream cheese and blueberry swirled into rich brownie.',o:brOpts(1300,2400,3500)},
+  {id:'b6',cat:'brownies',ic:'brownie',n:'Red Velvet Cream Cheese',d:'Red velvet brownie with a tangy cream cheese marble.',o:brOpts(1300,2400,3500)},
+  {id:'b7',cat:'brownies',ic:'brownie',n:'Salted Caramel Brownies',d:'Chewy brownie with caramel ribbons and flaky salt.',o:brOpts(1200,2200,3200)},
+  {id:'b8',cat:'brownies',ic:'brownie',n:'Double Chocolate Chunk',d:'Dark and milk chocolate chunks melted through every bite.',o:brOpts(1200,2200,3200)},
+
+  {id:'c1',cat:'cookies',ic:'cookie',n:'Classic Choco Chunk',d:'Crisp edges, soft middle, big pools of chocolate.',o:ckOpts(250,1400,2700)},
+  {id:'c2',cat:'cookies',ic:'cookie',n:'Biscoff Stuffed Cookie',d:'Brown sugar cookie with a molten Lotus centre.',tag:'Bestseller',o:ckOpts(350,1950,3800)},
+  {id:'c3',cat:'cookies',ic:'cookie',n:'Nutella Stuffed Cookie',d:'Thick cookie filled with warm hazelnut chocolate.',o:ckOpts(350,1950,3800)},
+  {id:'c4',cat:'cookies',ic:'cookie',n:'Red Velvet Cream Cheese',d:'Red velvet dough with white chocolate and a cream cheese core.',o:ckOpts(320,1800,3500)},
+  {id:'c5',cat:'cookies',ic:'cookie',n:'Blue Velvet Oreo Cookie',d:'Blue velvet cookie loaded with Oreo pieces.',o:ckOpts(320,1800,3500)},
+  {id:'c6',cat:'cookies',ic:'cookie',n:'Brown Butter Walnut',d:'Nutty brown butter dough with toasted walnuts.',o:ckOpts(300,1700,3300)},
+  {id:'c7',cat:'cookies',ic:'cookie',n:'Cookie Tub with Dip',d:'Mini cookies in a kraft tub with a cup of chocolate dip.',o:[{l:'Small tub',p:900},{l:'Large tub',p:1500}]},
+
+  {id:'p1',cat:'pops',ic:'cookie',n:'Classic Chocolate Popsicle',d:'Creamy chocolate ice pop dipped in a snappy dark chocolate shell. Made frozen, delivered chilled.',tag:'New',o:popOpts(350,1300,1900)},
+  {id:'p2',cat:'pops',ic:'cookie',n:'Oreo Crunch Popsicle',d:'Vanilla cream pop in a chocolate shell, rolled in crushed Oreo.',tag:'New',o:popOpts(400,1500,2200)},
+  {id:'p3',cat:'pops',ic:'cookie',n:'Nutella Hazelnut Popsicle',d:'Hazelnut chocolate pop with a Nutella shell and chopped hazelnuts.',o:popOpts(400,1500,2200)},
+  {id:'p4',cat:'pops',ic:'cookie',n:'Biscoff Crunch Popsicle',d:'Caramel biscuit pop dipped in a Biscoff coating and cookie crumb.',o:popOpts(400,1500,2200)},
+  {id:'p5',cat:'pops',ic:'cookie',n:'Chocolate Strawberry Popsicle',d:'Strawberry cream pop dipped in dark chocolate.',o:popOpts(380,1400,2000)},
+  {id:'p6',cat:'pops',ic:'cookie',n:'White Chocolate Berry Popsicle',d:'Strawberry pop in a white chocolate shell with berry bits.',o:popOpts(380,1400,2000)},
+
+  {id:'k1',cat:'cakes',ic:'cake',n:'Blueberry Cheesecake',d:'Chocolate cookie base, creamy set cheesecake and a blueberry glaze.',tag:'Bestseller',o:[{l:'6 inch',p:2800},{l:'8 inch',p:4200}]},
+  {id:'k2',cat:'cakes',ic:'cake',n:'Lotus Biscoff Cheesecake',d:'Biscoff crumb base with a spiced caramel cheesecake.',o:[{l:'6 inch',p:3000},{l:'8 inch',p:4500}]},
+  {id:'k3',cat:'cakes',ic:'cake',n:'Cookie Cake with Message',d:'A giant chocolate chip cookie, piped with your message.',o:[{l:'8 inch',p:2200},{l:'10 inch',p:3200}]},
+  {id:'k4',cat:'cakes',ic:'cake',n:'Chocolate Fudge Cake',d:'Moist chocolate sponge layered with fudge ganache.',o:[{l:'1 lb',p:2200},{l:'2 lb',p:4200}]},
+  {id:'k5',cat:'cakes',ic:'cake',n:'Red Velvet Cake',d:'Red velvet layers with cream cheese frosting.',o:[{l:'1 lb',p:2400},{l:'2 lb',p:4600}]},
+  {id:'k6',cat:'cakes',ic:'cake',n:'Vanilla Berry Cake',d:'Vanilla sponge, whipped cream and fresh berry compote.',o:[{l:'1 lb',p:2300},{l:'2 lb',p:4400}]},
+
+  {id:'x1',cat:'boxes',ic:'box',n:'Brownie Box of 8 (Assorted Swirls)',d:'Eight brownies in a window box: Biscoff, Nutella, blueberry and red velvet swirls.',tag:'Most ordered',o:[{l:'8 brownies',p:2400}]},
+  {id:'x2',cat:'boxes',ic:'box',n:'Tea Time Box',d:'4 fudge brownies and 4 stuffed cookies, boxed for sharing.',o:[{l:'8 pieces',p:2300}]},
+  {id:'x3',cat:'boxes',ic:'box',n:'Date Night Box',d:'A 6 inch cheesecake with 4 swirl brownies on the side.',o:[{l:'1 box',p:3900}]},
+  {id:'x4',cat:'boxes',ic:'box',n:'Party Box',d:'12 brownies and 12 cookies for birthdays and get-togethers.',o:[{l:'24 pieces',p:5800}]}
+];
+
+function $(id){return document.getElementById(id);}
+function rs(n){return 'Rs ' + Number(n).toLocaleString('en-US');}
+var cart = [];  /* [{id, oi, q}] */
+var cat = 'all';
+try{var s=localStorage.getItem('hc_cart'); if(s) cart=JSON.parse(s)||[];}catch(e){}
+function save(){try{localStorage.setItem('hc_cart',JSON.stringify(cart));}catch(e){}}
+function find(id){for(var i=0;i<ITEMS.length;i++) if(ITEMS[i].id===id) return ITEMS[i]; return null;}
+cart = cart.filter(function(c){var it=find(c.id); return it && it.o[c.oi];});
+
+/* static text from config */
+Array.prototype.forEach.call(document.querySelectorAll('[data-city]'),function(e){e.textContent=CONFIG.city;});
+$('waText').textContent = CONFIG.whatsappShown;
+$('igLink').textContent = '@' + CONFIG.instagram;
+$('igLink').href = 'https://instagram.com/' + CONFIG.instagram;
+
+/* menu */
+/* illustrated food art, drawn in a 200 x 150 box */
+var SH='<ellipse cx="100" cy="132" rx="72" ry="7" fill="rgba(60,30,10,.18)"/>';
+var BP={
+  b1:['#4a2a1a','#2b160e','#6b3b24',null], b2:['#4a2a1a','#2b160e','#6b3b24','#c89a5b'],
+  b3:['#4a2a1a','#2b160e','#d99a4a',null], b4:['#4a2a1a','#2b160e','#a8683e',null],
+  b5:['#4a2a1a','#2b160e','#9a7fd0',null], b6:['#8c2a2a','#5e1a1a','#f3e6d6',null],
+  b7:['#4a2a1a','#2b160e','#e0a23a',null], b8:['#3a2015','#24110a','#5a3320','#f0d9b5']
+};
+var CP={
+  c1:['#c98d4e','#4a2a1a',null], c2:['#b87433','#8a4b1c','#d9a15a'], c3:['#c98d4e','#3a2015','#5b3322'],
+  c4:['#a83a3a','#f3e6d6','#f3e6d6'], c5:['#4a7fb5','#22222b',null], c6:['#b9803f','#8b5a2b',null]
+};
+var CK={k1:['#3a2015','#f1e4d4','#7b5ea7','#2c2f6b'], k2:['#b87433','#e8cfa8','#c8843f','#a86a2c']};
+var LK={k4:['#4a2a1a','#e8cfb0','#2b160e','#6b3b24'], k5:['#a83a3a','#fbf3e6','#fbf3e6','#a83a3a'], k6:['#f0dcb0','#fff7ea','#fff7ea','#c0344f']};
+var CHIPS=[[70,48,7],[104,40,8],[128,70,7],[84,80,8],[112,102,7],[66,98,6],[98,66,5],[130,100,5]];
+
+function drip(x,y,w,d,fill){
+  var s='M'+x+' '+y;
+  for(var k=0;k<w.length;k++) s+='q'+(w[k]/2)+' '+d[k]+' '+w[k]+' 0';
+  return '<path d="'+s+'z" fill="'+fill+'"/>';
+}
+function brownieArt(p){
+  function wave(y){return '<path d="M52 '+y+'q10-14 20 0t20 0t20 0t20 0t20 0" fill="none" stroke="'+p[2]+'" stroke-width="5" stroke-linecap="round"/>';}
+  var bits='';
+  if(p[3]){[[58,58],[96,64],[132,56],[76,94],[114,92],[142,90]].forEach(function(b){
+    bits+='<rect x="'+b[0]+'" y="'+b[1]+'" width="11" height="8" rx="2" fill="'+p[3]+'" transform="rotate(18 '+b[0]+' '+b[1]+')"/>';});}
+  return SH+
+    '<rect x="58" y="30" width="100" height="56" rx="7" fill="'+p[1]+'"/><rect x="58" y="22" width="100" height="56" rx="7" fill="'+p[0]+'"/>'+
+    '<rect x="36" y="64" width="124" height="60" rx="8" fill="'+p[1]+'"/><rect x="36" y="52" width="124" height="60" rx="8" fill="'+p[0]+'"/>'+
+    wave(70)+wave(90)+bits+
+    '<path d="M44 60h50" stroke="#fff" stroke-opacity=".16" stroke-width="4" stroke-linecap="round"/>';
+}
+function cookieArt(p){
+  var s=SH+(p[2]?'<ellipse cx="142" cy="118" rx="28" ry="13" fill="'+p[2]+'"/><ellipse cx="152" cy="122" rx="14" ry="6" fill="'+p[2]+'" opacity=".7"/>':'')+
+    '<circle cx="96" cy="72" r="54" fill="'+p[0]+'"/><circle cx="96" cy="72" r="54" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="5"/>';
+  CHIPS.forEach(function(c){s+='<ellipse cx="'+c[0]+'" cy="'+c[1]+'" rx="'+c[2]+'" ry="'+(c[2]*.8)+'" fill="'+p[1]+'"/>';});
+  return s+'<path d="M62 46a46 46 0 0 1 30-14" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="5" stroke-linecap="round"/>';
+}
+function cookieCake(){
+  var s=SH+'<circle cx="100" cy="72" r="62" fill="#b9803f"/><circle cx="100" cy="72" r="62" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="5"/>';
+  for(var a=0;a<24;a++){var t=a/24*6.2832; s+='<circle cx="'+(100+54*Math.cos(t)).toFixed(1)+'" cy="'+(72+54*Math.sin(t)).toFixed(1)+'" r="3" fill="#fbf5ea"/>';}
+  [[58,50],[142,54],[62,98],[140,96],[100,36],[100,110]].forEach(function(c){s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="6" fill="#4a2a1a"/>';});
+  return s+'<text x="100" y="72" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-style="italic" font-weight="700" font-size="17" fill="#fbf5ea">Happy</text>'+
+    '<text x="100" y="92" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-style="italic" font-weight="700" font-size="17" fill="#fbf5ea">Birthday</text>';
+}
+function plate(){return '<ellipse cx="100" cy="128" rx="78" ry="10" fill="#e9dcc6"/><ellipse cx="100" cy="125" rx="72" ry="8" fill="#f7eedd"/>';}
+function cheeseArt(p){
+  var s=plate()+'<rect x="48" y="98" width="104" height="24" rx="4" fill="'+p[0]+'"/><rect x="48" y="62" width="104" height="38" rx="3" fill="'+p[1]+'"/>'+
+    '<ellipse cx="100" cy="62" rx="52" ry="9" fill="'+p[2]+'"/>'+drip(48,62,[14,16,12,18,14,16,14],[20,26,16,24,18,22,14],p[2]);
+  [[78,57],[100,53],[122,57],[90,63],[111,63]].forEach(function(d){s+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="6" fill="'+p[3]+'"/>';});
+  return s;
+}
+function layerArt(p){
+  var s=plate()+'<rect x="48" y="92" width="104" height="28" rx="4" fill="'+p[0]+'"/><rect x="46" y="84" width="108" height="10" rx="5" fill="'+p[1]+'"/>'+
+    '<rect x="48" y="58" width="104" height="28" rx="4" fill="'+p[0]+'"/><rect x="46" y="50" width="108" height="10" rx="5" fill="'+p[1]+'"/>'+
+    '<ellipse cx="100" cy="50" rx="54" ry="9" fill="'+p[2]+'"/>'+drip(46,50,[14,16,12,18,14,20,14],[18,24,12,28,16,22,14],p[2]);
+  [[80,45],[100,41],[120,45],[90,51],[110,51]].forEach(function(d){s+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="6" fill="'+p[3]+'"/>';});
+  return s;
+}
+function tubArt(){
+  var s=SH;
+  [[76,60],[100,52],[124,60]].forEach(function(c){
+    s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="16" fill="#b87433"/><circle cx="'+(c[0]-5)+'" cy="'+(c[1]-4)+'" r="3" fill="#4a2a1a"/><circle cx="'+(c[0]+5)+'" cy="'+(c[1]+3)+'" r="3" fill="#4a2a1a"/>';});
+  return s+'<path d="M54 64H146L136 126H64Z" fill="#c9a06a"/><rect x="68" y="82" width="64" height="24" rx="4" fill="#fbf5ea"/>'+
+    '<text x="100" y="99" text-anchor="middle" font-family="Pinyon Script,cursive" font-size="17" fill="#7a4a2e">dip me</text>'+
+    '<rect x="146" y="102" width="34" height="24" rx="5" fill="#7a4a2e"/><rect x="143" y="98" width="40" height="7" rx="3" fill="#fbf5ea"/>';
+}
+function boxArt(id){
+  var BC=['#4a2a1a','#4a2a1a','#8c2a2a','#4a2a1a'], SC=['#d99a4a','#a8683e','#9a7fd0','#f3e6d6'];
+  function bw(x,y,k){return '<rect x="'+x+'" y="'+y+'" width="28" height="28" rx="4" fill="'+BC[k%4]+'"/><path d="M'+(x+4)+' '+(y+10)+'q5-7 10 0t10 0M'+(x+4)+' '+(y+20)+'q5-7 10 0t10 0" fill="none" stroke="'+SC[k%4]+'" stroke-width="3" stroke-linecap="round"/>';}
+  function ck(x,y){return '<circle cx="'+(x+14)+'" cy="'+(y+14)+'" r="14" fill="#c98d4e"/><circle cx="'+(x+9)+'" cy="'+(y+10)+'" r="2.5" fill="#4a2a1a"/><circle cx="'+(x+18)+'" cy="'+(y+13)+'" r="2.5" fill="#4a2a1a"/><circle cx="'+(x+12)+'" cy="'+(y+20)+'" r="2.5" fill="#4a2a1a"/>';}
+  var s=SH+'<rect x="26" y="36" width="148" height="88" rx="6" fill="#c9a06a"/><rect x="34" y="44" width="132" height="72" rx="4" fill="#ead9bd"/>', k=0;
+  for(var r=0;r<2;r++) for(var c=0;c<4;c++){
+    var x=38+c*32, y=48+r*32;
+    if(id==='x3'){ if(c<2) s+=bw(x,y,k); }
+    else if(id==='x2'&&r===1) s+=ck(x,y);
+    else if(id==='x4'&&(r+c)%2===1) s+=ck(x,y);
+    else s+=bw(x,y,k);
+    k++;
+  }
+  if(id==='x3'){s+='<circle cx="134" cy="80" r="29" fill="#f1e4d4"/><circle cx="134" cy="80" r="21" fill="#7b5ea7"/>'+
+    '<circle cx="127" cy="74" r="4" fill="#2c2f6b"/><circle cx="141" cy="78" r="4" fill="#2c2f6b"/><circle cx="131" cy="88" r="4" fill="#2c2f6b"/><circle cx="143" cy="90" r="3" fill="#2c2f6b"/>';}
+  return s+'<rect x="84" y="30" width="32" height="14" rx="3" fill="#7a4a2e"/><text x="100" y="40" text-anchor="middle" font-family="Pinyon Script,cursive" font-size="12" fill="#fbf5ea">fresh</text>';
+}
+function popOpts(a,b,c){return [{l:'1 popsicle',p:a},{l:'Box of 4',p:b},{l:'Box of 6',p:c}];}
+var PP={
+  p1:['#7b4a2e','#2b160e','#a8683e'], p2:['#e8d6bf','#2b160e','#d6d6dd'], p3:['#8a5230','#4a2a1a','#c89a5b'],
+  p4:['#d9a15a','#8a4b1c','#ecc88f'], p5:['#e58aa5','#4a2a1a','#f4b6c8'], p6:['#e58aa5','#fbf3e6','#c0344f']
+};
+function popOne(x,y,rot,p){
+  var s='<g transform="translate('+x+','+y+') rotate('+rot+')">'+
+    '<rect x="-5" y="40" width="10" height="50" rx="5" fill="#e2c28f"/>'+
+    '<rect x="-24" y="-48" width="48" height="100" rx="22" fill="'+p[0]+'"/>'+
+    '<path d="M-24 -26a24 22 0 0 1 48 0V6q-6 16-12 0q-6 22-12 0q-6 14-12 0q-6 18-12 0Z" fill="'+p[1]+'"/>';
+  [[-12,-30],[6,-38],[-3,-16],[12,-10],[-14,-6]].forEach(function(b){
+    s+='<rect x="'+b[0]+'" y="'+b[1]+'" width="7" height="5" rx="1.5" fill="'+p[2]+'" transform="rotate(20 '+b[0]+' '+b[1]+')"/>';});
+  return s+'<rect x="-18" y="-40" width="6" height="42" rx="3" fill="#fff" opacity=".2"/></g>';
+}
+function popArt(p){
+  return '<ellipse cx="100" cy="136" rx="62" ry="6" fill="rgba(60,30,10,.18)"/>'+
+    popOne(128,54,14,[p[0],p[1],p[2]]).replace('opacity=".2"','opacity=".12"')+popOne(78,58,-10,p);
+}
+var LN=0;
+function logoSvg(){
+  LN++; var a='lga'+LN, b='lgb'+LN;
+  var chips=[[88,92],[110,106],[94,114],[112,88],[100,100]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="3.4" fill="#4a2a1a"/>';}).join('');
+  return '<svg viewBox="0 0 200 200" role="img" aria-label="Honeycrumb Bake House logo">'+
+    '<circle cx="100" cy="100" r="97" style="fill:var(--paper)" stroke="currentColor" stroke-width="3"/>'+
+    '<circle cx="100" cy="100" r="91" fill="none" stroke="currentColor" stroke-width="1.2"/>'+
+    '<circle cx="100" cy="100" r="62" fill="none" stroke="currentColor" stroke-width="1.5"/>'+
+    '<path id="'+a+'" d="M28,100a72,72 0 0 1 144,0" fill="none"/><path id="'+b+'" d="M16,100a84,84 0 0 0 168,0" fill="none"/>'+
+    '<g font-family="Karla,sans-serif" font-weight="700" font-size="14" letter-spacing="3.5" fill="currentColor" text-anchor="middle">'+
+    '<text><textPath href="#'+a+'" startOffset="50%">HONEYCRUMB</textPath></text>'+
+    '<text><textPath href="#'+b+'" startOffset="50%">BAKE HOUSE</textPath></text></g>'+
+    '<circle cx="21" cy="100" r="3" fill="currentColor"/><circle cx="179" cy="100" r="3" fill="currentColor"/>'+
+    '<circle cx="100" cy="100" r="40" fill="#c98d4e" stroke="currentColor" stroke-width="2.5"/>'+chips+
+    '<circle cx="128" cy="72" r="14" style="fill:var(--paper)"/><path d="M114 72a14 14 0 0 0 14 14" fill="none" stroke="currentColor" stroke-width="0"/>'+
+    '<circle cx="132" cy="86" r="2" fill="#c98d4e"/><circle cx="138" cy="80" r="1.6" fill="#c98d4e"/>'+
+    '</svg>';
+}
+function artSvg(i){
+  var inner, steam=false;
+  if(i.cat==='brownies'){inner=brownieArt(BP[i.id]); steam=true;}
+  else if(i.cat==='cookies'){inner=(i.id==='c7')?tubArt():cookieArt(CP[i.id]); steam=(i.id!=='c7');}
+  else if(i.cat==='pops'){inner=popArt(PP[i.id]);}
+  else if(i.cat==='cakes'){inner=(i.id==='k3')?cookieCake():(CK[i.id]?cheeseArt(CK[i.id]):layerArt(LK[i.id]));}
+  else inner=boxArt(i.id);
+  var st=steam?'<g class="steam" style="color:var(--muted)"><path d="M78 16q-6-7 0-13"/><path d="M100 14q-6-7 0-13"/><path d="M122 16q-6-7 0-13"/></g>':'';
+  var n=(parseInt(i.id.slice(1),10)%3)+1;
+  return '<svg viewBox="0 0 200 150" role="img" aria-label="'+i.n+' illustration">'+st+'<g class="bob b'+n+'">'+inner+'</g></svg>';
+}
+function heroSvg(){
+  return '<g transform="translate(90,0) scale(1.5)"><g class="bob b2">'+cheeseArt(CK.k1)+'</g></g>'+
+    '<g transform="translate(-6,126) scale(1.1)"><g class="bob">'+cookieArt(CP.c2)+'</g></g>'+
+    '<g transform="translate(204,152)"><g class="bob b3">'+brownieArt(BP.b3)+'</g></g>';
+}
+function fly(el){
+  if(!el.animate||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  var a=el.getBoundingClientRect(), b=$('openCart').getBoundingClientRect();
+  var d=document.createElement('div'); d.className='fly'; d.innerHTML='<svg aria-hidden="true"><use href="#i-cookie"/></svg>';
+  d.style.left=a.left+'px'; d.style.top=a.top+'px'; document.body.appendChild(d);
+  var an=d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+(b.left-a.left)+'px,'+(b.top-a.top)+'px) scale(.3)',opacity:.3}],{duration:700,easing:'ease-in'});
+  an.onfinish=function(){d.remove();};
+}
+
+function renderTabs(){
+  $('tabs').innerHTML = CATS.map(function(c){
+    return '<button class="tab" type="button" data-cat="'+c.id+'" aria-pressed="'+(c.id===cat)+'">'+c.label+'</button>';
+  }).join('');
+}
+function renderGrid(){
+  var list = ITEMS.filter(function(i){return cat==='all'||i.cat===cat;});
+  $('grid').innerHTML = list.map(function(i,ix){
+    var pick = i.o.length>1
+      ? '<select id="sel-'+i.id+'" aria-label="Size for '+i.n+'">'+i.o.map(function(o,k){return '<option value="'+k+'">'+o.l+' &middot; '+rs(o.p)+'</option>';}).join('')+'</select>'
+      : '<span class="fixed-opt">'+i.o[0].l+'</span><span class="price">'+rs(i.o[0].p)+'</span>';
+    return '<article class="item" style="--i:'+ix+'"><div class="art">'+artSvg(i)+'</div><div class="in"><div class="row">'+
+      '<div><h3>'+i.n+'</h3>'+(i.tag?'<span class="tag">'+i.tag+'</span>':'')+'</div></div>'+
+      '<p class="d">'+i.d+'</p><div class="buy">'+pick+'<button class="add" type="button" data-add="'+i.id+'">Add</button></div></div></article>';
+  }).join('');
+}
+$('tabs').addEventListener('click',function(e){
+  var b=e.target.closest('[data-cat]'); if(!b) return;
+  cat=b.getAttribute('data-cat'); renderTabs(); renderGrid();
+});
+$('grid').addEventListener('click',function(e){
+  var b=e.target.closest('[data-add]'); if(!b) return;
+  var id=b.getAttribute('data-add'), sel=$('sel-'+id), oi=sel?parseInt(sel.value,10):0;
+  fly(b);
+  addToCart(id,oi);
+  b.textContent='Added'; b.classList.add('done');
+  setTimeout(function(){b.textContent='Add'; b.classList.remove('done');},900);
+});
+
+/* cart */
+function addToCart(id,oi){
+  var cb=$('openCart'); cb.classList.remove('bump'); void cb.offsetWidth; cb.classList.add('bump');
+  for(var i=0;i<cart.length;i++) if(cart[i].id===id&&cart[i].oi===oi){cart[i].q++; return update();}
+  cart.push({id:id,oi:oi,q:1}); update();
+}
+function totals(){
+  var n=0,t=0; cart.forEach(function(c){var it=find(c.id); n+=c.q; t+=c.q*it.o[c.oi].p;}); return {n:n,t:t};
+}
+function update(){
+  save();
+  var T=totals();
+  $('cartN').textContent=T.n;
+  $('barL').textContent=T.n+(T.n===1?' item':' items')+' · '+rs(T.t);
+  $('bar').hidden = !(T.n>0) || !$('drawer').hidden;
+  renderLines(); buildLinks();
+}
+function renderLines(){
+  var T=totals();
+  if(!cart.length){
+    $('lines').innerHTML='<p class="empty">Your order is empty. Add something from the menu.</p>';
+    $('totalRow').hidden=true; $('ck').hidden=true; return;
+  }
+  $('lines').innerHTML = cart.map(function(c,k){
+    var it=find(c.id), o=it.o[c.oi];
+    return '<div class="line"><div><b>'+it.n+'</b><small>'+o.l+' &middot; '+rs(o.p)+' each</small>'+
+      '<span class="qty"><button type="button" data-q="-1" data-k="'+k+'" aria-label="One less">&minus;</button><span>'+c.q+'</span><button type="button" data-q="1" data-k="'+k+'" aria-label="One more">+</button></span></div>'+
+      '<div class="p">'+rs(o.p*c.q)+'</div></div>';
+  }).join('');
+  $('total').textContent=rs(T.t);
+  $('totalRow').hidden=false; $('ck').hidden=false;
+}
+$('lines').addEventListener('click',function(e){
+  var b=e.target.closest('[data-q]'); if(!b) return;
+  var k=parseInt(b.getAttribute('data-k'),10); cart[k].q+=parseInt(b.getAttribute('data-q'),10);
+  if(cart[k].q<=0) cart.splice(k,1);
+  update();
+});
+
+/* drawer */
+var lastFocus=null;
+function openCart(){lastFocus=document.activeElement; $('veil').hidden=false; $('drawer').hidden=false; $('bar').hidden=true; $('closeCart').focus();}
+function closeCart(){$('veil').hidden=true; $('drawer').hidden=true; update(); if(lastFocus&&lastFocus.focus) lastFocus.focus();}
+$('openCart').addEventListener('click',openCart);
+$('bar').addEventListener('click',openCart);
+$('closeCart').addEventListener('click',closeCart);
+$('veil').addEventListener('click',closeCart);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('drawer').hidden) closeCart();});
+
+/* checkout */
+function pad(n){return (n<10?'0':'')+n;}
+(function(){
+  var d=new Date(); d.setDate(d.getDate()+1);
+  var iso=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  $('cDate').min=iso; $('cDate').value=iso;
+})();
+function orderText(){
+  var T=totals(), L=[];
+  L.push('Assalam o Alaikum! I would like to place an order with Honeycrumb Bake House.','');
+  cart.forEach(function(c){var it=find(c.id), o=it.o[c.oi]; L.push('- '+c.q+' x '+it.n+' ('+o.l+') = '+rs(o.p*c.q));});
+  L.push('','Items total: '+rs(T.t)+' (delivery charge extra)','');
+  L.push('Name: '+$('cName').value.trim());
+  L.push('Phone: '+$('cPhone').value.trim());
+  L.push($('cMode').value+(($('cMode').value==='Delivery')?' address: '+$('cAddr').value.trim():''));
+  L.push('Needed on: '+$('cDate').value);
+  L.push('Payment: '+$('cPay').value);
+  if($('cNote').value.trim()) L.push('Notes: '+$('cNote').value.trim());
+  return L.join('\n');
+}
+function buildLinks(){
+  if(!cart.length) return;
+  $('wa').href='https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent(orderText());
+  $('ig').href='https://ig.me/m/'+CONFIG.instagram;
+}
+function valid(){
+  var m='';
+  if(!cart.length) m='Add at least one item first.';
+  else if(!$('cName').value.trim()) m='Please enter your name.';
+  else if($('cPhone').value.replace(/\D/g,'').length<10) m='Please enter a valid phone number.';
+  else if(!$('cDate').value) m='Please choose the date you need it.';
+  else if($('cMode').value==='Delivery'&&!$('cAddr').value.trim()) m='Please enter your delivery address.';
+  $('err').textContent=m; return !m;
+}
+$('ck').addEventListener('input',function(){
+  $('addrL').firstChild.nodeValue = $('cMode').value==='Delivery'?'Delivery address':'Pickup note (optional)';
+  $('err').textContent=''; buildLinks();
+});
+$('wa').addEventListener('click',function(e){ if(!valid()){e.preventDefault(); return;} buildLinks(); });
+function toast(t){var el=$('toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(function(){el.hidden=true;},2800);}
+function copyText(t,msg){
+  function fallback(){var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast(msg);}catch(x){toast('Select and copy the text manually.');} document.body.removeChild(ta);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast(msg);},fallback);} else fallback();
+}
+$('ig').addEventListener('click',function(e){
+  if(!valid()){e.preventDefault(); return;}
+  copyText(orderText(),'Order copied. Paste it in our Instagram DM.');
+});
+document.querySelector('[data-copy="wa"]').addEventListener('click',function(){copyText(CONFIG.whatsappShown,'Number copied.');});
+
+var mb=$('menuBtn'), mm=$('mmenu');
+function setMenu(o){mm.hidden=!o; mb.setAttribute('aria-expanded',o?'true':'false'); mb.setAttribute('aria-label',o?'Close menu':'Open menu');}
+mb.addEventListener('click',function(){setMenu(mm.hidden);});
+mm.addEventListener('click',function(e){if(e.target.closest('a')) setMenu(false);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape') setMenu(false);});
+$('heroArt').innerHTML = heroSvg();
+Array.prototype.forEach.call(document.querySelectorAll('[data-logo]'),function(e){e.innerHTML=logoSvg();});
+(function(){
+  var t=ITEMS.map(function(i){return '<span>'+i.n+'</span><i>&bull;</i>';}).join('');
+  $('track').innerHTML = t + t;
+})();
+renderTabs(); renderGrid(); update();
+</script>
+</body>
+</html>
